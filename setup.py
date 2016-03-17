@@ -42,7 +42,7 @@ setup(
     download_url="https://github.com/smartdeveloperhub/agora-fragments/tarball/{}".format(metadata.get('version')),
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
     namespace_packages=['agora', 'agora.fragments'],
-    install_requires=['Agora-Stoa-Client'],
+    install_requires=['Agora-Stoa-Client', 'flask', 'futures', 'rdflib'],
     classifiers=[],
     scripts=['fragments'],
     package_dir={'agora.fragments': 'agora/fragments'},

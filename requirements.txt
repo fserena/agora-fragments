@@ -2,3 +2,4 @@ nose
 rdflib
 futures
 Agora-Stoa-Client
+flask
