@@ -85,17 +85,20 @@ def get_fragment():
     gp_str = request.args.get('gp', '{}')
     import re
 
-    gp_match = re.search(r'\{(.*)\}', gp_str).groups(0)
-    if len(gp_match) != 1:
-        raise APIError('Invalid graph pattern')
+    try:
+        gp_match = re.search(r'\{(.*)\}', gp_str).groups(0)
+        if len(gp_match) != 1:
+            raise APIError('Invalid graph pattern')
 
-    tps = re.split('\. ', gp_match[0])
-    prefixes, fragment_gen = get_fragment_generator(*tps, monitoring=30, **STOA)
-    graph = Graph()
-    for prefix in prefixes:
-        graph.bind(prefix, prefixes[prefix])
+        tps = re.split('\. ', gp_match[0])
+        prefixes, fragment_gen = get_fragment_generator(*tps, monitoring=30, **STOA)
+        graph = Graph()
+        for prefix in prefixes:
+            graph.bind(prefix, prefixes[prefix])
 
-    return Response(stream_with_context(get_quads()), mimetype='text/n3')
+        return Response(stream_with_context(get_quads()), mimetype='text/n3')
+    except Exception, e:
+        raise APIError('There was a problem with the request: {}'.format(e.message), status_code=500)
 
 
 @app.route('/query')
@@ -117,11 +120,15 @@ def query():
     gp_str = request.args.get('gp', '{}')
     import re
 
-    gp_match = re.search(r'\{(.*)\}', gp_str).groups(0)
-    if len(gp_match) != 1:
-        raise APIError('Invalid graph pattern')
+    try:
+        gp_match = re.search(r'\{(.*)\}', gp_str).groups(0)
+        if len(gp_match) != 1:
+            raise APIError('Invalid graph pattern')
 
-    tps = re.split('\. ', gp_match[0])
-    prefixes, result_gen = get_query_generator(*tps, monitoring=10, **STOA)
+        tps = re.split('\. ', gp_match[0])
+        prefixes, result_gen = get_query_generator(*tps, monitoring=10, **STOA)
 
-    return Response(stream_with_context(get_results()), mimetype='application/json')
+        return Response(stream_with_context(get_results()), mimetype='application/json')
+    except Exception, e:
+        raise APIError('There was a problem with the request: {}'.format(e.message), status_code=500)
+
