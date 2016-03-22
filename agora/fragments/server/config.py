@@ -37,9 +37,9 @@ def _stoa_conf(def_broker_host, def_broker_port, def_agora_host, def_agora_port,
                def_topic_pattern, def_response_prefix):
     return {
         'broker_host': os.environ.get('BROKER_HOST', def_broker_host),
-        'broker_port': os.environ.get('BROKER_PORT', def_broker_port),
+        'broker_port': int(os.environ.get('BROKER_PORT', def_broker_port)),
         'agora_host': os.environ.get('AGORA_HOST', def_agora_host),
-        'agora_port': os.environ.get('AGORA_PORT', def_agora_port),
+        'agora_port': int(os.environ.get('AGORA_PORT', def_agora_port)),
         'exchange': os.environ.get('EXCHANGE_NAME', def_exchange),
         'topic_pattern': os.environ.get('TOPIC_PATTERN', def_topic_pattern),
         'response_prefix': os.environ.get('RESPONSE_PREFIX', def_response_prefix)
