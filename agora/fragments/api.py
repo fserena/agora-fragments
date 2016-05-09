@@ -126,7 +126,11 @@ def query():
             raise APIError('Invalid graph pattern')
 
         tps = re.split('\. ', gp_match[0])
-        prefixes, result_gen = get_query_generator(*tps, monitoring=10, **STOA)
+        extra_params = {k: request.args.get(k) for k in request.args.keys() if k in ['excl', 'updating']}
+        if request.args.get('excl', None):
+            print 'aaa'
+        extra_params['STOA'] = STOA
+        prefixes, result_gen = get_query_generator(*tps, monitoring=10, **extra_params)
 
         return Response(stream_with_context(get_results()), mimetype='application/json')
     except Exception, e:
