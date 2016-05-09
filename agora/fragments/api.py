@@ -91,7 +91,10 @@ def get_fragment():
             raise APIError('Invalid graph pattern')
 
         tps = re.split('\. ', gp_match[0])
-        prefixes, fragment_gen = get_fragment_generator(*tps, monitoring=30, **STOA)
+        extra_params = {k: request.args.get(k) for k in request.args.keys() if k in ['excl', 'updating']}
+        extra_params['STOA'] = STOA
+
+        prefixes, fragment_gen = get_fragment_generator(*tps, monitoring=30, **extra_params)
         graph = Graph()
         for prefix in prefixes:
             graph.bind(prefix, prefixes[prefix])
@@ -127,8 +130,6 @@ def query():
 
         tps = re.split('\. ', gp_match[0])
         extra_params = {k: request.args.get(k) for k in request.args.keys() if k in ['excl', 'updating']}
-        if request.args.get('excl', None):
-            print 'aaa'
         extra_params['STOA'] = STOA
         prefixes, result_gen = get_query_generator(*tps, monitoring=10, **extra_params)
 
