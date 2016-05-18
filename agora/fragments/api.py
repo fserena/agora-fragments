@@ -79,8 +79,10 @@ def get_fragment():
                 yield ''
             else:
                 headers, (c, s, p, o) = chunk
-                yield u'{} {} {} .\n'.format(s.n3(graph.namespace_manager), p.n3(graph.namespace_manager),
+                triple = u'{} {} {} .\n'.format(s.n3(graph.namespace_manager), p.n3(graph.namespace_manager),
                                              o.n3(graph.namespace_manager))
+                print headers, triple
+                yield triple
 
     gp_str = request.args.get('gp', '{}')
     import re
@@ -91,7 +93,7 @@ def get_fragment():
             raise APIError('Invalid graph pattern')
 
         tps = re.split('\. ', gp_match[0])
-        extra_params = {k: request.args.get(k) for k in request.args.keys() if k in ['excl', 'updating']}
+        extra_params = {k: request.args.get(k) for k in request.args.keys() if k in ['gen', 'updating']}
         extra_params['STOA'] = STOA
 
         prefixes, fragment_gen = get_fragment_generator(*tps, monitoring=30, **extra_params)
@@ -100,7 +102,7 @@ def get_fragment():
             graph.bind(prefix, prefixes[prefix])
 
         return Response(stream_with_context(get_quads()), mimetype='text/n3')
-    except Exception, e:
+    except Exception as e:
         raise APIError('There was a problem with the request: {}'.format(e.message), status_code=500)
 
 
@@ -129,11 +131,11 @@ def query():
             raise APIError('Invalid graph pattern')
 
         tps = re.split('\. ', gp_match[0])
-        extra_params = {k: request.args.get(k) for k in request.args.keys() if k in ['excl', 'updating']}
+        extra_params = {k: request.args.get(k) for k in request.args.keys() if k in ['gen', 'updating']}
         extra_params['STOA'] = STOA
         prefixes, result_gen = get_query_generator(*tps, monitoring=10, **extra_params)
 
         return Response(stream_with_context(get_results()), mimetype='application/json')
-    except Exception, e:
+    except Exception as e:
         raise APIError('There was a problem with the request: {}'.format(e.message), status_code=500)
 
