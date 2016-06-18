@@ -91,7 +91,7 @@ def get_fragment():
             raise APIError('Invalid graph pattern')
 
         tps = re.split('\. ', gp_match[0])
-        extra_params = {k: request.args.get(k) for k in request.args.keys() if k in ['excl', 'updating']}
+        extra_params = {k: request.args.get(k) for k in request.args.keys() if k in ['gen', 'updating', 'events']}
         extra_params['STOA'] = STOA
 
         prefixes, fragment_gen = get_fragment_generator(*tps, monitoring=30, **extra_params)
@@ -129,7 +129,7 @@ def query():
             raise APIError('Invalid graph pattern')
 
         tps = re.split('\. ', gp_match[0])
-        extra_params = {k: request.args.get(k) for k in request.args.keys() if k in ['excl', 'updating']}
+        extra_params = {k: request.args.get(k) for k in request.args.keys() if k in ['gen', 'updating', 'events']}
         extra_params['STOA'] = STOA
         prefixes, result_gen = get_query_generator(*tps, monitoring=10, **extra_params)
 
