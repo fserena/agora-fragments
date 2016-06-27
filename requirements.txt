@@ -3,3 +3,4 @@ rdflib
 futures
 Agora-Stoa-Client
 flask
+flask-cors
