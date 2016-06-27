@@ -24,10 +24,12 @@
 
 import os
 from flask import Flask
+from flask.ext.cors import CORS
 
 __author__ = 'Fernando Serena'
 
 config = os.environ.get('FRAGMENT_SERVER_CONFIG', 'agora.fragments.server.config.DevelopmentConfig')
 
 app = Flask(__name__)
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 app.config.from_object(config)
