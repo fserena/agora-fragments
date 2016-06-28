@@ -6,4 +6,4 @@
 *.xml
 dist/
 .coverage
-
+build/
